@@ -3,15 +3,18 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
+
 def compute_gini(model):
     agent_wealths = [agent.wealth for agent in model.schedule.agents]
     x = sorted(agent_wealths)
     N = model.num_agents
-    B = sum( xi * (N-i) for i,xi in enumerate(x) ) / (N*sum(x))
-    return (1 + (1/N) - 2*B)
+    B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
+    return (1 + (1 / N) - 2 * B)
+
 
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
+
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.wealth = 1
@@ -36,12 +39,15 @@ class MoneyAgent(Agent):
         if self.wealth > 0:
             self.give_money()
 
+
 class MoneyModel(Model):
     """A model with some number of agents."""
+
     def __init__(self, N, width, height):
         self.num_agents = N
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
+        self.running = True
 
         # Create agents
         for i in range(self.num_agents):
