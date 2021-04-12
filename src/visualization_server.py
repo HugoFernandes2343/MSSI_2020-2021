@@ -2,8 +2,10 @@ from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 from parking_lot_model import MoneyModel
 from mesa.visualization.modules import ChartModule
+from histogram_module import HistogramModule
 
 # metodo de representacao das bolinhas vermelhas TODO adaptar para carros
+
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle",
                  "Filled": "true",
@@ -19,15 +21,15 @@ def agent_portrayal(agent):
     return portrayal
 
 
-grid = CanvasGrid(agent_portrayal, 100, 100, 500, 500)
+grid = CanvasGrid(agent_portrayal, 10, 10, 500, 500)
 
 chart = ChartModule([{"Label": "Gini",
                       "Color": "Black"}],
                     data_collector_name='datacollector')
 
+histogram = HistogramModule(list(range(10)), 200, 500)
 server = ModularServer(MoneyModel,
-                       [grid, chart],
+                       [grid, histogram, chart],
                        "Money Model",
-                       {"N":100, "width":100, "height":100})
-server.port = 8521  # The default
+                       {"N":100, "width":10, "height":10})
 server.launch()

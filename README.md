@@ -4,4 +4,4 @@ pip install numpy
 
 run:
 cd src
-python run_model.py
+python visualization_server.py
