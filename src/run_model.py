@@ -43,3 +43,20 @@ batch_run = BatchRunner(MoneyModel,
                         max_steps=100,
                         model_reporters={"Gini": compute_gini})
 batch_run.run_all()
+
+run_data = batch_run.get_model_vars_dataframe()
+run_data.head()
+plt.scatter(run_data.N, run_data.Gini)
+plt.show()
+
+#Get the Agent DataCollection
+data_collector_agents = batch_run.get_collector_agents()
+
+print(data_collector_agents[(10,2)])
+
+#Get the Model DataCollection.
+
+data_collector_model = batch_run.get_collector_model()
+
+print(data_collector_model[(10,1)])
+
