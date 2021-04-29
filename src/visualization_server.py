@@ -21,7 +21,7 @@ def agent_portrayal(agent):
     return portrayal
 
 
-grid = CanvasGrid(agent_portrayal, 10, 10, 500, 500)
+grid = CanvasGrid(agent_portrayal, 50, 50, 1000, 1000)
 
 chart = ChartModule([{"Label": "Gini",
                       "Color": "Black"}],
@@ -31,5 +31,5 @@ histogram = HistogramModule(list(range(10)), 200, 500)
 server = ModularServer(MoneyModel,
                        [grid, histogram, chart],
                        "Money Model",
-                       {"N":100, "width":10, "height":10})
+                       {"N":100, "width":50, "height":50})
 server.launch()
