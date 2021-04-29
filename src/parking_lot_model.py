@@ -3,22 +3,14 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
-
-def compute_gini(model):
-    agent_wealths = [agent.wealth for agent in model.schedule.agents]
-    x = sorted(agent_wealths)
-    N = model.num_agents
-    B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
-    return (1 + (1 / N) - 2 * B)
-
-
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
 
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.wealth = 1
-
+        self.flag=0
+#todo change move to be only moving to the left
     def move(self):
         possible_steps = self.model.grid.get_neighborhood(
             self.pos,
@@ -31,13 +23,20 @@ class MoneyAgent(Agent):
         cellmates = self.model.grid.get_cell_list_contents([self.pos])
         if len(cellmates) > 1:
             other = self.random.choice(cellmates)
-            other.wealth += 1
+            #other.wealth += 1
             self.wealth -= 1
 
     def step(self):
         self.move()
         if self.wealth > 0:
             self.give_money()
+
+#todo remove wealth only leave wall flag
+class Tile(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.flag = 1
+
 
 
 class MoneyModel(Model):
@@ -48,6 +47,13 @@ class MoneyModel(Model):
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
+#todo try to see if this is taking too long
+        for num in range(0,self.grid.width * self.grid.height):
+            for i in range(0, self.grid.width):
+                for j in range(0, self.grid.height):
+                    a = Tile(num, self)
+                    self.grid.place_agent(a, (i, j))
+
 
         # Create agents
         for i in range(self.num_agents):
@@ -58,10 +64,10 @@ class MoneyModel(Model):
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
 
-        self.datacollector = DataCollector(
-            model_reporters={"Gini": compute_gini},
-            agent_reporters={"Wealth": "wealth"})
+        #self.datacollector = DataCollector(
+          #  model_reporters={"Gini": compute_gini},
+#            agent_reporters={"Wealth": "wealth"})
 
     def step(self):
-        self.datacollector.collect(self)
+        #self.datacollector.collect(self)
         self.schedule.step()
