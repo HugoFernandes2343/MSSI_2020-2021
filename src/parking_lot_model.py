@@ -3,40 +3,33 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
+
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
 
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.wealth = 1
-        self.flag=0
-#todo change move to be only moving to the left
+        self.flag = 0
+
+    # todo change move to be only moving to the left
     def move(self):
-        possible_steps = self.model.grid.get_neighborhood(
+        '''possible_steps = self.model.grid.get_neighborhood(
             self.pos,
             moore=True,
-            include_center=False)
-        new_position = self.random.choice(possible_steps)
+            include_center=False)'''
+        new_position = self.pos[0] + 1, self.pos[1]
         self.model.grid.move_agent(self, new_position)
-
-    def give_money(self):
-        cellmates = self.model.grid.get_cell_list_contents([self.pos])
-        if len(cellmates) > 1:
-            other = self.random.choice(cellmates)
-            #other.wealth += 1
-            self.wealth -= 1
 
     def step(self):
         self.move()
-        if self.wealth > 0:
-            self.give_money()
 
-#todo remove wealth only leave wall flag
+
+# todo remove wealth only leave wall flag
 class Tile(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.flag = 1
-
 
 
 class MoneyModel(Model):
@@ -47,15 +40,8 @@ class MoneyModel(Model):
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
-#todo try to see if this is taking too long
-        for num in range(0,self.grid.width * self.grid.height):
-            for i in range(0, self.grid.width):
-                for j in range(0, self.grid.height):
-                    a = Tile(num, self)
-                    self.grid.place_agent(a, (i, j))
 
-
-        # Create agents
+        # TODO turn this into proper car agents that will only be able to walk on black spots
         for i in range(self.num_agents):
             a = MoneyAgent(i, self)
             self.schedule.add(a)
@@ -64,10 +50,135 @@ class MoneyModel(Model):
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
 
-        #self.datacollector = DataCollector(
-          #  model_reporters={"Gini": compute_gini},
-#            agent_reporters={"Wealth": "wealth"})
+        #Creating the roads
+        i = 1
+        while i <= 17:
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a, (i, 1))
+            i = i + 1
+        i = 1
+        while i <= 17:
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a,(18,i))
+            i = i + 1
+        i = 18
+        while i > 1 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a,(i,18))
+            i = i - 1
+        i = 18
+        while i > 1 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a,(1,i))
+            i = i - 1
+        i = 2
+        while i <= 17 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a,(i,14))
+            i = i + 1
+
+        #Creating the exit
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(7,2))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(7,3))
+
+        #Creating the entrance todo add a function to the movement that makes cars that enter go to a parking tile
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(12,2))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(12,3))
+
+        ## The three blocks that will hold the cars
+        # todo make it so the number of blocks (1-3) depends on the amount of parking tiers
+        ##
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(7,8))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(9,8))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(11,8))
+
+        #Creating the parking lot outline
+        i = 4
+        while i <= 12 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a,(4,i))
+            i = i + 1
+
+        i = 4
+        while i <= 12 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents, self)
+            self.grid.place_agent(a,(15,i))
+            i = i + 1
+
+        i=4
+        while i <= 14 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents,self)
+            self.grid.place_agent(a,(i,12))
+            i = i + 1
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(5,4))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(6,4))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(14,4))
+
+        self.num_agents = self.num_agents + 1
+        a = Tile(self.num_agents, self)
+        self.grid.place_agent(a,(13,4))
+
+        i = 6
+        while i < 9 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents,self)
+            self.grid.place_agent(a,(i,5))
+            i = i + 1
+
+        i = 13
+        while i > 10 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents,self)
+            self.grid.place_agent(a,(i,5))
+            i = i - 1
+
+        i = 8
+        while i < 12 :
+            self.num_agents = self.num_agents + 1
+            a = Tile(self.num_agents,self)
+            self.grid.place_agent(a,(i,4))
+            i = i + 1
+
+    # self.datacollector = DataCollector(
+        #  model_reporters={"Gini": compute_gini},
+
+    #            agent_reporters={"Wealth": "wealth"})
 
     def step(self):
-        #self.datacollector.collect(self)
+        # self.datacollector.collect(self)
         self.schedule.step()
