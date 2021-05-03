@@ -3,6 +3,8 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
+roads =[]
+
 
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
@@ -14,12 +16,27 @@ class MoneyAgent(Agent):
 
     # todo change move to be only moving to the left
     def move(self):
-        '''possible_steps = self.model.grid.get_neighborhood(
+        possible_steps = self.model.grid.get_neighborhood(
             self.pos,
-            moore=True,
-            include_center=False)'''
-        new_position = self.pos[0] + 1, self.pos[1]
-        self.model.grid.move_agent(self, new_position)
+            moore=False,
+            include_center=False)
+        """ for position in possible_steps:
+            if position in roads:
+                self.model.grid.move_agent(self, position) """
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x+1,y) in roads):
+            self.model.grid.move_agent(self, (x+1,y))
+        elif((x,y-1) in roads):
+                self.model.grid.move_agent(self, (x,y-1))
+        elif((x,y+1) in roads):
+                self.model.grid.move_agent(self, (x,y+1))
+        elif((x-1,y) in roads):
+                self.model.grid.move_agent(self, (x-1,y))
+
+
+
+        #new_position = self.pos[0] + 1, self.pos[1]
 
     def step(self):
         self.move()
@@ -40,7 +57,6 @@ class MoneyModel(Model):
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
-        roads =[]
         
         #Creating the roads
         i = 1
@@ -188,6 +204,7 @@ class MoneyModel(Model):
             roads.append((i,4))
             i = i + 1
 
+        self.num_agents = N
         # TODO turn this into proper car agents that will only be able to walk on black spots
         for i in range(self.num_agents):
             a = MoneyAgent(i, self)
