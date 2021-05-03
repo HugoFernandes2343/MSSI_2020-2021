@@ -35,5 +35,5 @@ grid = CanvasGrid(agent_portrayal, 20, 20, 800,800 )
 server = ModularServer(MoneyModel,
                        [grid],
                        "Money Model",
-                       {"N":1, "width":20, "height":20})
+                       {"N":10, "width":20, "height":20})
 server.launch()

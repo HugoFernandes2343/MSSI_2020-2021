@@ -13,27 +13,101 @@ class MoneyAgent(Agent):
         super().__init__(unique_id, model)
         self.wealth = 1
         self.flag = 0
+        self.dir = 0
+        
 
-    # todo change move to be only moving to the left
-    def move(self):
-        possible_steps = self.model.grid.get_neighborhood(
-            self.pos,
-            moore=False,
-            include_center=False)
-        """ for position in possible_steps:
-            if position in roads:
-                self.model.grid.move_agent(self, position) """
+    def moveUp(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x,y+1) in roads):
+            self.model.grid.move_agent(self, (x,y+1))
+        else:
+            self.changeDir()
+
+    def moveDown(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x,y-1) in roads):
+            self.model.grid.move_agent(self, (x,y-1))
+        else:
+            self.changeDir()
+    
+    def moveRight(self):
         x=self.pos[0]
         y=self.pos[1]
         if((x+1,y) in roads):
             self.model.grid.move_agent(self, (x+1,y))
-        elif((x,y-1) in roads):
-                self.model.grid.move_agent(self, (x,y-1))
-        elif((x,y+1) in roads):
-                self.model.grid.move_agent(self, (x,y+1))
-        elif((x-1,y) in roads):
-                self.model.grid.move_agent(self, (x-1,y))
+        else:
+            self.changeDir()
 
+    def moveLeft(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x-1,y) in roads):
+            self.model.grid.move_agent(self, (x-1,y))
+        else:
+            self.changeDir()
+
+    def changeDir(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        direction = self.dir
+        if(direction == 3):
+            if((x+1,y) in roads):
+                self.dir = 3
+            elif((x,y-1) in roads):
+                self.dir = 1
+            elif((x-1,y) in roads):
+                self.dir = 2
+            elif((x,y+1) in roads):
+                self.dir = 0
+        elif(direction == 1):
+            if((x,y-1) in roads):
+                self.dir = 1
+            elif((x-1,y) in roads):
+                self.dir = 2
+            elif((x,y+1) in roads):
+                self.dir = 0
+            elif((x+1,y) in roads):
+                self.dir = 3
+        elif(direction == 2):
+            if((x-1,y) in roads):
+                self.dir = 2
+            elif((x,y+1) in roads):
+                self.dir = 0
+            elif((x+1,y) in roads):
+                self.dir = 3
+            elif((x,y-1) in roads):
+                self.dir = 1
+        elif(direction == 0):
+            if((x,y+1) in roads):
+                self.dir = 0
+            elif((x+1,y) in roads):
+                self.dir = 3
+            elif((x,y-1) in roads):
+                self.dir = 1
+            elif((x-1,y) in roads):
+                self.dir = 2
+
+
+    # todo change move to be only moving to the left
+    def move(self):
+        """
+        possible_steps = self.model.grid.get_neighborhood(
+            self.pos,
+            moore=False,
+            include_center=False)
+        for position in possible_steps:
+            if position in roads:
+                self.model.grid.move_agent(self, position) """
+        if(self.dir == 0):
+            self.moveUp()
+        elif(self.dir == 1):
+            self.moveDown()
+        elif(self.dir == 2):
+            self.moveLeft()
+        elif(self.dir == 3):
+            self.moveRight()       
 
 
         #new_position = self.pos[0] + 1, self.pos[1]
