@@ -2,11 +2,12 @@ from mesa import Agent, Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
+import random
 
 roads =[]
 
 
-class MoneyAgent(Agent):
+class CarAgent(Agent):
     """ An agent with fixed initial wealth."""
 
     def __init__(self, unique_id, model):
@@ -14,6 +15,12 @@ class MoneyAgent(Agent):
         self.wealth = 1
         self.flag = 0
         self.dir = 0
+        '''Money that the car has to spend on the parking lot'''
+        self.wallet = 0.0
+        '''Time, in hours that will be seconds for the simmulation, that the car wants to spend on the park'''
+        self.time = 0
+        '''State of the car (moving,queuing,parked)'''
+        self.state = None
 
 
     def moveUp(self):
@@ -89,7 +96,7 @@ class Tile(Agent):
         self.flag = 1
 
 
-class MoneyModel(Model):
+class ParkingModel(Model):
     """A model with some number of agents."""
 
     def __init__(self, N, width, height):
@@ -97,7 +104,20 @@ class MoneyModel(Model):
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
-        
+        '''Total spots of the parking lot'''
+        self.spots = random.randint(20,100)
+        '''Price per hour'''
+        self.price = round(random.uniform(0.1,10.0),1)
+        '''Id of the strategy 1 - Default; 2 - Premium Spots; 3 - Max Time; 4 - Scalling; 5 - Reservation'''
+        self.strategy = random.choice([1,2,3,4,5])
+        if(self.strategy == 2):
+            #TODO decide how many tiers this strat is going to have
+            self.strategy = 3
+        if(self.strategy == 3):
+             self.maxTime = random.randint(1,24)
+        if(self.strategy == 4):
+            self.scalling = round(random.uniform(0.0,0.5),1)
+
         #Creating the roads
         i = 1
         while i <= 17:
@@ -247,7 +267,11 @@ class MoneyModel(Model):
         self.num_agents = N
         # TODO turn this into proper car agents that will only be able to walk on black spots
         for i in range(self.num_agents):
-            a = MoneyAgent(i, self)
+            a = CarAgent(i, self)
+            # TODO define the limits of this variables
+            a.wallet = round(random.uniform(0.0,100.0),2)
+            a.time = random.randint(1,24)
+            a.state = "moving"
             self.schedule.add(a)
             done = 0
             while not done:

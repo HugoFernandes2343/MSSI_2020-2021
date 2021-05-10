@@ -1,6 +1,6 @@
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
-from parking_lot_model import MoneyModel
+from parking_lot_model import ParkingModel
 from mesa.visualization.modules import ChartModule
 from histogram_module import HistogramModule
 
@@ -32,7 +32,7 @@ grid = CanvasGrid(agent_portrayal, 20, 20, 800,800 )
  #                   data_collector_name='datacollector')
 
 #histogram = HistogramModule(list(range(10)), 200, 500)
-server = ModularServer(MoneyModel,
+server = ModularServer(ParkingModel,
                        [grid],
                        "Money Model",
                        {"N":10, "width":20, "height":20})

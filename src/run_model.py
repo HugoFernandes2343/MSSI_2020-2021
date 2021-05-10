@@ -1,9 +1,9 @@
-from parking_lot_model import MoneyModel, compute_gini
+from parking_lot_model import ParkingModel, compute_gini
 import matplotlib.pyplot as plt
 import numpy as np
 from mesa.batchrunner import BatchRunner
 
-# model = MoneyModel(50, 10, 10)
+# model = ParkingModel(50, 10, 10)
 # for i in range(100):
 #     model.step()
 #
@@ -36,7 +36,7 @@ fixed_params = {"width": 10,
                 "height": 10}
 variable_params = {"N": range(10, 500, 10)}
 
-batch_run = BatchRunner(MoneyModel,
+batch_run = BatchRunner(ParkingModel,
                         variable_params,
                         fixed_params,
                         iterations=5,
