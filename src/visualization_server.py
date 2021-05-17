@@ -3,6 +3,8 @@ from mesa.visualization.ModularVisualization import ModularServer
 from parking_lot_model import ParkingModel
 from mesa.visualization.modules import ChartModule
 from histogram_module import HistogramModule
+from mesa.visualization.UserParam import UserSettableParameter
+
 
 # metodo de representacao das bolinhas vermelhas TODO adaptar para carros
 
@@ -32,8 +34,31 @@ grid = CanvasGrid(agent_portrayal, 20, 20, 800,800 )
  #                   data_collector_name='datacollector')
 
 #histogram = HistogramModule(list(range(10)), 200, 500)
+
+""" 
+Parameter types include:
+
+'number' - a simple numerical input
+'checkbox' - boolean checkbox
+'choice' - String-based dropdown input, for selecting choices within a model
+'slider' - A number-based slider input with settable increment
+'static_text' - A non-input textbox for displaying model info.
+
+ """
+
+model_params = {
+    "N":10, 
+    "width":20, 
+    "height":20,
+    "variableSlider": UserSettableParameter("slider", "Variable slider example", 0.5, 0, 1.0, 0.1),
+    "variableNumber": UserSettableParameter("number", "Variable number example",1),
+    "variableOption": UserSettableParameter("choice", 'Opçoes', value='Opcao A',
+                                          choices=['Opcao A', 'Opcao A']),
+    "variableCheckbox": UserSettableParameter('checkbox', 'Booleano', value=True)
+}
+
 server = ModularServer(ParkingModel,
                        [grid],
                        "Money Model",
-                       {"N":10, "width":20, "height":20})
+                       model_params)
 server.launch()

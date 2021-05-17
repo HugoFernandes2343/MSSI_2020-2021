@@ -99,7 +99,7 @@ class Tile(Agent):
 class ParkingModel(Model):
     """A model with some number of agents."""
 
-    def __init__(self, N, width, height):
+    def __init__(self, N, width, height, variableSlider,variableNumber, variableOption,variableCheckbox):
         self.num_agents = N
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
