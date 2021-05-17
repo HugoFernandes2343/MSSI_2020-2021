@@ -21,8 +21,12 @@ class CarAgent(Agent):
         self.time = 0
         '''State of the car (moving,queuing,parked)'''
         self.state = None
+        '''Does the car want to park'''
+        self.wantsToPark = False
 
+#                    self.grid.place_agent(a, (x, y))
 
+# 7 1
     def moveUp(self):
         x=self.pos[0]
         y=self.pos[1]
@@ -73,6 +77,18 @@ class CarAgent(Agent):
 
     # todo change move to be only moving to the left
     def move(self):
+        #case change dir on upper bifurcation
+        if((self.pos[0]==1 and self.pos[1]==14) or (self.pos[0]==18 and self.pos[1]==14)):
+            k = random.randint(0, 1)
+            if(k==1):
+                self.changeDir()
+
+        #check if he wants to park
+
+        if(self.pos[0]==7 and self.pos[1]==1):
+            if(self.wantsToPark):
+                self.dir=0
+
         if(self.dir == 0):
             self.moveUp()
         elif(self.dir == 1):
