@@ -50,10 +50,10 @@ model_params = {
     "N":10, 
     "width":20, 
     "height":20,
-    "variableSlider": UserSettableParameter("slider", "Variable slider example", 0.5, 0, 1.0, 0.1),
-    "variableNumber": UserSettableParameter("number", "Variable number example",1),
-    "variableOption": UserSettableParameter("choice", 'Opçoes', value='Opcao A',
-                                          choices=['Opcao A', 'Opcao A']),
+    "variableSlider": UserSettableParameter("slider", "Price per hour", value=5, min_value=0.1, max_value=10.0, step=0.1),
+    "variableNumber": UserSettableParameter("number", "Number of Parking Spots", 20, min_value=20, max_value=100),
+    "variableOption": UserSettableParameter("choice", 'Strategy to Use', value='1 - Default',
+                                          choices=['1 - Default', '2 - Premium Spots', '3 - Max Time', '4 - Scalling', '5 - Reservation']),
     "variableCheckbox": UserSettableParameter('checkbox', 'Booleano', value=True)
 }
 
