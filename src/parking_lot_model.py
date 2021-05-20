@@ -123,27 +123,30 @@ class Tile(Agent):
 class ParkingModel(Model):
     """A model with some number of agents."""
 
-    def __init__(self, N, width, height, variableSlider,variableNumber, variableOption,variableCheckbox):
-        self.num_agents = variableSlider
-        self.aux = variableSlider
+    def __init__(self, N, width, height,N_cars, N_spots,Price_hour, Strategy,N_tier1_spots,N_tier1_price,N_tier2_spots,N_tier2_price,N_tier3_spots,N_tier3_price,Max_time,Scalling):
+        self.num_agents = N_cars
+        self.aux = N_cars
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
 
-        self.active = variableCheckbox
         '''Total spots of the parking lot'''
-        self.spots = random.randint(20,100)
+        self.spots = N_spots
         '''Price per hour'''
-        self.price = round(random.uniform(0.1,10.0),1)
+        self.price = Price_hour
         '''Id of the strategy 1 - Default; 2 - Premium Spots; 3 - Max Time; 4 - Scalling; 5 - Reservation'''
-        self.strategy = random.choice([1,2,3,4,5])
+        self.strategy = Strategy
         if(self.strategy == 2):
-            #TODO decide how many tiers this strat is going to have
-            self.strategy = 3
+            self.tier_1_spots = N_tier1_spots
+            self.tier_2_spots = N_tier2_spots
+            self.tier_3_spots = N_tier3_spots
+            self.tier_1_price = N_tier1_price
+            self.tier_2_price = N_tier2_price
+            self.tier_3_price = N_tier3_price
         if(self.strategy == 3):
-             self.maxTime = random.randint(1,24)
+             self.max_time = Max_time
         if(self.strategy == 4):
-            self.scalling = round(random.uniform(0.0,0.5),1)
+            self.scalling = Scalling
 
         #Creating the roads
         i = 1
@@ -317,5 +320,4 @@ class ParkingModel(Model):
 
     def step(self):
         # self.datacollector.collect(self)
-        print(str(self.active))
         self.schedule.step()
