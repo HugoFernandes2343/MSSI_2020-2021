@@ -5,7 +5,7 @@ from mesa.datacollection import DataCollector
 import random
 
 roads =[]
-
+spawn =[]
 
 class CarAgent(Agent):
     """ An agent with fixed initial wealth."""
@@ -24,9 +24,6 @@ class CarAgent(Agent):
         '''Does the car want to park'''
         self.wantsToPark = False
 
-#                    self.grid.place_agent(a, (x, y))
-
-# 7 1
     def moveUp(self):
         x=self.pos[0]
         y=self.pos[1]
@@ -78,10 +75,21 @@ class CarAgent(Agent):
     # todo change move to be only moving to the left
     def move(self):
         #case change dir on upper bifurcation
-        if((self.pos[0]==1 and self.pos[1]==14) or (self.pos[0]==18 and self.pos[1]==14)):
-            k = random.randint(0, 1)
-            if(k==1):
-                self.changeDir()
+
+        if(self.pos[0]==1 and self.pos[1]==14):
+            if(self.dir==1):
+                self.dir=3
+            if(self.dir==2):
+                self.dir=0
+
+        if(self.pos[0]==18 and self.pos[1]==14):
+            if(self.wantsToPark):
+                self.dir=1
+            elif(self.dir==1):
+                self.dir=2
+            elif(self.dir==3):
+                self.dir=0
+                
 
         #check if he wants to park
 
@@ -116,10 +124,13 @@ class ParkingModel(Model):
     """A model with some number of agents."""
 
     def __init__(self, N, width, height, variableSlider,variableNumber, variableOption,variableCheckbox):
-        self.num_agents = N
+        self.num_agents = variableSlider
+        self.aux = variableSlider
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
+
+        self.active = variableCheckbox
         '''Total spots of the parking lot'''
         self.spots = random.randint(20,100)
         '''Price per hour'''
@@ -141,6 +152,7 @@ class ParkingModel(Model):
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a, (i, 1))
             roads.append((i,1))
+
             i = i + 1
         i = 1
         while i <= 17:
@@ -148,6 +160,9 @@ class ParkingModel(Model):
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a,(18,i))
             roads.append((18,i))
+            if(i>13):
+                spawn.append((18,i))
+
             i = i + 1
         i = 18
         while i > 1 :
@@ -155,6 +170,7 @@ class ParkingModel(Model):
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a,(i,18))
             roads.append((i,18))
+            spawn.append((i,18))
             i = i - 1
         i = 18
         while i > 1 :
@@ -162,6 +178,8 @@ class ParkingModel(Model):
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a,(1,i))
             roads.append((1,i))
+            if(i>13):
+                spawn.append((1,i))
             i = i - 1
         i = 2
         while i <= 17 :
@@ -169,6 +187,7 @@ class ParkingModel(Model):
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a,(i,14))
             roads.append((i,14))
+            spawn.append((i,14))
             i = i + 1
 
         #Creating the exit
@@ -217,7 +236,6 @@ class ParkingModel(Model):
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a,(4,i))
-            roads.append((4,i))
             i = i + 1
 
         i = 4
@@ -225,7 +243,6 @@ class ParkingModel(Model):
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents, self)
             self.grid.place_agent(a,(15,i))
-            roads.append((15,i))
             i = i + 1
 
         i=4
@@ -233,35 +250,29 @@ class ParkingModel(Model):
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents,self)
             self.grid.place_agent(a,(i,12))
-            roads.append((i,12))
             i = i + 1
 
         self.num_agents = self.num_agents + 1
         a = Tile(self.num_agents, self)
         self.grid.place_agent(a,(5,4))
-        roads.append((5,4))
 
         self.num_agents = self.num_agents + 1
         a = Tile(self.num_agents, self)
         self.grid.place_agent(a,(6,4))
-        roads.append((6,4))
 
         self.num_agents = self.num_agents + 1
         a = Tile(self.num_agents, self)
         self.grid.place_agent(a,(14,4))
-        roads.append((14,4))
 
         self.num_agents = self.num_agents + 1
         a = Tile(self.num_agents, self)
         self.grid.place_agent(a,(13,4))
-        roads.append((13,4))
 
         i = 6
         while i < 9 :
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents,self)
             self.grid.place_agent(a,(i,5))
-            roads.append((i,5))
             i = i + 1
 
         i = 13
@@ -269,7 +280,6 @@ class ParkingModel(Model):
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents,self)
             self.grid.place_agent(a,(i,5))
-            roads.append((i,5))
             i = i - 1
 
         i = 8
@@ -277,10 +287,9 @@ class ParkingModel(Model):
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents,self)
             self.grid.place_agent(a,(i,4))
-            roads.append((i,4))
             i = i + 1
 
-        self.num_agents = N
+        self.num_agents = self.aux
         # TODO turn this into proper car agents that will only be able to walk on black spots
         for i in range(self.num_agents):
             a = CarAgent(i, self)
@@ -294,7 +303,7 @@ class ParkingModel(Model):
                 # Add the agent to a random grid cell
                 x = self.random.randrange(self.grid.width)
                 y = self.random.randrange(self.grid.height)
-                if (x,y) in roads:
+                if (x,y) in spawn:
                     done = 1
                     self.grid.place_agent(a, (x, y))
 
@@ -308,4 +317,5 @@ class ParkingModel(Model):
 
     def step(self):
         # self.datacollector.collect(self)
+        print(str(self.active))
         self.schedule.step()
