@@ -16,9 +16,9 @@ class CarAgent(Agent):
         self.flag = 0
         self.dir = 0
         '''Money that the car has to spend on the parking lot'''
-        self.wallet = 0.0
+        self.wallet = random.randint(5,50)
         '''Time, in hours that will be seconds for the simmulation, that the car wants to spend on the park'''
-        self.time = 0
+        self.time = random.randint(1,24)
         '''State of the car (moving,queuing,parked)'''
         self.state = None
         '''Does the car want to park'''
@@ -93,9 +93,13 @@ class CarAgent(Agent):
 
         #check if he wants to park
 
-        if(self.pos[0]==7 and self.pos[1]==1):
+        if(self.pos[0]==12 and self.pos[1]==1):
             if(self.wantsToPark):
                 self.dir=0
+
+        #check if he is at the entrance
+        if(self.pos[0]==12 and self.pos[1]==3):
+            #como é que verificamos se há lugares XD
 
         if(self.dir == 0):
             self.moveUp()
@@ -110,6 +114,10 @@ class CarAgent(Agent):
         #new_position = self.pos[0] + 1, self.pos[1]
 
     def step(self):
+
+        n = random.randint(0,200)
+        if n==1:
+            self.wantsToPark = True
         self.move()
 
 
@@ -293,7 +301,6 @@ class ParkingModel(Model):
             i = i + 1
 
         self.num_agents = self.aux
-        # TODO turn this into proper car agents that will only be able to walk on black spots
         for i in range(self.num_agents):
             a = CarAgent(i, self)
             # TODO define the limits of this variables
