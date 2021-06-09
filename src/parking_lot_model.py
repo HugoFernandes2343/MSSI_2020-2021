@@ -308,7 +308,11 @@ class CarAgent(Agent,ParkingModel):
             if self.model.available_spots > 0:
                 if self.wealth > (self.model.price * self.time):
                     #park and place him in the middle slot
+                    self.model.grid.move_agent(self, (9,8))
                     #change dir to 4 and as such he stays put
+                    self.dir = 4
+
+                    
                 #if not greater than the desired total time, create a function to decide if he parks or not
                 #this function sould be more likely to park the closer he can get to the desired time
 
