@@ -7,126 +7,6 @@ import random
 roads =[]
 spawn =[]
 
-class CarAgent(Agent):
-    """ An agent with fixed initial wealth."""
-
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-        self.wealth = 1
-        self.flag = 0
-        self.dir = 0
-        '''Money that the car has to spend on the parking lot'''
-        self.wallet = random.randint(5,50)
-        '''Time, in hours that will be seconds for the simmulation, that the car wants to spend on the park'''
-        self.time = random.randint(1,24)
-        '''State of the car (moving,queuing,parked)'''
-        self.state = None
-        '''Does the car want to park'''
-        self.wantsToPark = False
-
-    def moveUp(self):
-        x=self.pos[0]
-        y=self.pos[1]
-        if((x,y+1) in roads):
-            self.model.grid.move_agent(self, (x,y+1))
-        else:
-            self.changeDir()
-
-    def moveDown(self):
-        x=self.pos[0]
-        y=self.pos[1]
-        if((x,y-1) in roads):
-            self.model.grid.move_agent(self, (x,y-1))
-        else:
-            self.changeDir()
-    
-    def moveRight(self):
-        x=self.pos[0]
-        y=self.pos[1]
-        if((x+1,y) in roads):
-            self.model.grid.move_agent(self, (x+1,y))
-        else:
-            self.changeDir()
-
-    def moveLeft(self):
-        x=self.pos[0]
-        y=self.pos[1]
-        if((x-1,y) in roads):
-            self.model.grid.move_agent(self, (x-1,y))
-        else:
-            self.changeDir()
-
-    def changeDir(self):
-        x=self.pos[0]
-        y=self.pos[1]
-        direction = self.dir
-        if(direction == 3 or direction == 2):
-            if((x,y-1) in roads):
-                self.dir = 1
-            elif((x,y+1) in roads):
-                self.dir = 0
-        elif(direction == 1 or direction == 0):
-            if((x-1,y) in roads):
-                self.dir = 2
-            elif((x+1,y) in roads):
-                self.dir = 3
-
-
-    # todo change move to be only moving to the left
-    def move(self):
-        #case change dir on upper bifurcation
-
-        if(self.pos[0]==1 and self.pos[1]==14):
-            if(self.dir==1):
-                self.dir=3
-            if(self.dir==2):
-                self.dir=0
-
-        if(self.pos[0]==18 and self.pos[1]==14):
-            if(self.wantsToPark):
-                self.dir=1
-            elif(self.dir==1):
-                self.dir=2
-            elif(self.dir==3):
-                self.dir=0
-                
-
-        #check if he wants to park
-
-        if(self.pos[0]==12 and self.pos[1]==1):
-            if(self.wantsToPark):
-                self.dir=0
-
-        #check if he is at the entrance
-        if(self.pos[0]==12 and self.pos[1]==3):
-            #como é que verificamos se há lugares XD
-
-        if(self.dir == 0):
-            self.moveUp()
-        elif(self.dir == 1):
-            self.moveDown()
-        elif(self.dir == 2):
-            self.moveLeft()
-        elif(self.dir == 3):
-            self.moveRight()       
-
-
-        #new_position = self.pos[0] + 1, self.pos[1]
-
-    def step(self):
-
-        n = random.randint(0,200)
-        if n==1:
-            self.wantsToPark = True
-        self.move()
-
-
-# todo remove wealth only leave wall flag
-class Tile(Agent):
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-        self.flag = 1
-
 
 class ParkingModel(Model):
     """A model with some number of agents."""
@@ -140,6 +20,7 @@ class ParkingModel(Model):
 
         '''Total spots of the parking lot'''
         self.spots = N_spots
+        self.available_spots = N_spots
         '''Price per hour'''
         self.price = Price_hour
         '''Id of the strategy 1 - Default; 2 - Premium Spots; 3 - Max Time; 4 - Scalling; 5 - Reservation'''
@@ -152,7 +33,7 @@ class ParkingModel(Model):
             self.tier_2_price = N_tier2_price
             self.tier_3_price = N_tier3_price
         if(self.strategy == 3):
-             self.max_time = Max_time
+            self.max_time = Max_time
         if(self.strategy == 4):
             self.scalling = Scalling
 
@@ -321,10 +202,142 @@ class ParkingModel(Model):
 
 
     # self.datacollector = DataCollector(
-        #  model_reporters={"Gini": compute_gini},
+    #  model_reporters={"Gini": compute_gini},
 
     #            agent_reporters={"Wealth": "wealth"})
 
     def step(self):
         # self.datacollector.collect(self)
         self.schedule.step()
+
+class CarAgent(Agent,ParkingModel):
+    """ An agent with fixed initial wealth."""
+
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.model = model
+        self.id = unique_id
+        self.wealth = 1
+        self.flag = 0
+        self.dir = 0
+        '''Money that the car has to spend on the parking lot'''
+        self.wallet = random.randint(5,50)
+        '''Time, in hours that will be seconds for the simmulation, that the car wants to spend on the park'''
+        self.time = random.randint(1,24)
+        self.time_elapsed = 0
+        '''State of the car (moving,queuing,parked)'''
+        self.state = None
+        '''Does the car want to park'''
+        self.wantsToPark = False
+
+    def moveUp(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x,y+1) in roads):
+            self.model.grid.move_agent(self, (x,y+1))
+        else:
+            self.changeDir()
+
+    def moveDown(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x,y-1) in roads):
+            self.model.grid.move_agent(self, (x,y-1))
+        else:
+            self.changeDir()
+    
+    def moveRight(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x+1,y) in roads):
+            self.model.grid.move_agent(self, (x+1,y))
+        else:
+            self.changeDir()
+
+    def moveLeft(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        if((x-1,y) in roads):
+            self.model.grid.move_agent(self, (x-1,y))
+        else:
+            self.changeDir()
+
+    def changeDir(self):
+        x=self.pos[0]
+        y=self.pos[1]
+        direction = self.dir
+        if(direction == 3 or direction == 2):
+            if((x,y-1) in roads):
+                self.dir = 1
+            elif((x,y+1) in roads):
+                self.dir = 0
+        elif(direction == 1 or direction == 0):
+            if((x-1,y) in roads):
+                self.dir = 2
+            elif((x+1,y) in roads):
+                self.dir = 3
+
+
+    # todo change move to be only moving to the left
+    def move(self):
+        #case change dir on upper bifurcation
+
+        if(self.pos[0]==1 and self.pos[1]==14):
+            if(self.dir==1):
+                self.dir=3
+            if(self.dir==2):
+                self.dir=0
+
+        if(self.pos[0]==18 and self.pos[1]==14):
+            if(self.wantsToPark):
+                self.dir=1
+            elif(self.dir==1):
+                self.dir=2
+            elif(self.dir==3):
+                self.dir=0
+                
+
+        #check if he wants to park
+
+        if(self.pos[0]==12 and self.pos[1]==1):
+            if(self.wantsToPark):
+                self.dir=0
+
+        #check if he is at the entrance
+        if(self.pos[0]==12 and self.pos[1]==3):
+            if self.model.available_spots > 0:
+                if self.wealth > (self.model.price * self.time):
+                    #park and place him in the middle slot
+                    #change dir to 4 and as such he stays put
+                #if not greater than the desired total time, create a function to decide if he parks or not
+                #this function sould be more likely to park the closer he can get to the desired time
+
+            #como é que verificamos se há lugares XD
+
+        if(self.dir == 0):
+            self.moveUp()
+        elif(self.dir == 1):
+            self.moveDown()
+        elif(self.dir == 2):
+            self.moveLeft()
+        elif(self.dir == 3):
+            self.moveRight()       
+
+
+        #new_position = self.pos[0] + 1, self.pos[1]
+
+    def step(self):
+
+        n = random.randint(0,200)
+        if n==1:
+            self.wantsToPark = True
+        self.move()
+
+
+# todo remove wealth only leave wall flag
+class Tile(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.flag = 1
+
+
