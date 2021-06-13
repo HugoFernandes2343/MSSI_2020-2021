@@ -324,7 +324,7 @@ class CarAgent(Agent,ParkingModel):
 
         if(self.pos[0]==9 and self.pos[1]==8):
             if(self.wait_time == 9999):
-                self.wait_time = self.time-1
+                self.wait_time = (self.time*10) - 1
             if(self.wait_time == 1):
                 self.wait_time = 9999
                 self.model.grid.move_agent(self, (7,3))
