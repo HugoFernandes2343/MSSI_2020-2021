@@ -365,6 +365,8 @@ class CarAgent(Agent,ParkingModel):
                         self.dir = 4
                         #pays the park
                         self.model.makings += price_for_total_time_tier_1
+                    else:
+                        self.no_money += 1                
                 if (self.model.tier_2_spots > 0):
                     print("Eu sou o carro " + str(self.id) + " e quero entrar no 2")
                     if self.wallet > price_for_total_time_tier_2:
@@ -375,6 +377,8 @@ class CarAgent(Agent,ParkingModel):
                         self.dir = 4
                         #pays the park
                         self.model.makings += price_for_total_time_tier_2
+                    else:
+                        self.no_money += 1
                 if (self.model.tier_3_spots > 0):
                     print("Eu sou o carro " + str(self.id) + " e quero entrar no 3")
                     if self.wallet > price_for_total_time_tier_3:
@@ -386,20 +390,22 @@ class CarAgent(Agent,ParkingModel):
                         #pays the park
                         self.model.makings += price_for_total_time_tier_3
                     else:
-                        self.no_money = 1
-                if(self.no_money == 1):
+                        self.no_money += 1
+                if(self.no_money == 3):
                     if (random.randrange(0,100) < percentage_tier_1 and self.model.tier_1_spots > 0):
                         self.new_time = self.wallet/self.model.tier_1_price
                         self.wait_time = math.floor(self.new_time)
                         self.model.makings = self.wait_time * self.model.tier_1_price
                         self.model.grid.move_agent(self, (7,8))
                         self.dir = 4
+                if(self.no_money == 2):            
                     if (random.randrange(0,100) < percentage_tier_2 and self.model.tier_2_spots > 0):
                         self.new_time = self.wallet/self.model.tier_2_price
                         self.wait_time = math.floor(self.new_time)
                         self.model.makings = self.wait_time * self.model.tier_2_price
                         self.model.grid.move_agent(self, (9,8)) 
-                        self.dir = 4                    
+                        self.dir = 4   
+                if(self.no_money == 1):             
                     if (random.randrange(0,100) < percentage_tier_3 and self.model.tier_3_spots > 0):
                         self.new_time = self.wallet/self.model.tier_3_price
                         self.wait_time = math.floor(self.new_time)
