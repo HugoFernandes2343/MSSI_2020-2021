@@ -222,8 +222,10 @@ class CarAgent(Agent,ParkingModel):
         self.dir = 0
         '''Money that the car has to spend on the parking lot'''
         self.wallet = random.randint(5,50)
+        '''Time, in hours that will be seconds for the simmulation, that the car is parked'''
+        self.wait_time = 9999
         '''Time, in hours that will be seconds for the simmulation, that the car wants to spend on the park'''
-        self.time = random.randint(1,24)
+        self.time = random.randint(2,24)
         self.time_elapsed = 0
         '''State of the car (moving,queuing,parked)'''
         self.state = None
@@ -311,12 +313,25 @@ class CarAgent(Agent,ParkingModel):
                     self.model.grid.move_agent(self, (9,8))
                     #change dir to 4 and as such he stays put
                     self.dir = 4
-
+                else:
+                    self.model.grid.move_agent(self, (12,1))
+                    self.dir = 2
                     
                 #if not greater than the desired total time, create a function to decide if he parks or not
                 #this function sould be more likely to park the closer he can get to the desired time
 
             #como é que verificamos se há lugares XD
+
+        if(self.pos[0]==9 and self.pos[1]==8):
+            if(self.wait_time == 9999):
+                self.wait_time = self.time-1
+            if(self.wait_time == 1):
+                self.wait_time = 9999
+                self.model.grid.move_agent(self, (7,3))
+                self.dir = 1
+                self.wantsToPark = False
+            elif(self.wait_time > 1):
+                self.wait_time -= 1    
 
         if(self.dir == 0):
             self.moveUp()
