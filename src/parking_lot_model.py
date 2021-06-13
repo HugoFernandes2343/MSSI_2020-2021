@@ -354,14 +354,14 @@ class CarAgent(Agent,ParkingModel):
                 #print("Eu sou o carro " + str(self.id) +" E tenho " + str(self.wallet) +" para gastar, o 1 custa me " + str(price_for_total_time_tier_1))
                 #print("Eu sou o carro " + str(self.id) +" E tenho " + str(self.wallet) +" para gastar, o 2 custa me " + str(price_for_total_time_tier_2))
                 #print("Eu sou o carro " + str(self.id) +" E tenho " + str(self.wallet) +" para gastar, o 3 custa me " + str(price_for_total_time_tier_3))
-
-                if (self.model.tier_3_spots > 0 and self.wallet > price_for_total_time_tier_3):
+                
+                if (self.model.tier_1_spots > 0 and self.wallet > price_for_total_time_tier_1):
                     #park and place him in the middle slot
-                    self.model.grid.move_agent(self, (11,8))
+                    self.model.grid.move_agent(self, (7,8))
                     #change dir to 4 and as such he stays put
                     self.dir = 4
                     #pays the park
-                    self.model.makings += price_for_total_time_tier_3
+                    self.model.makings += price_for_total_time_tier_1
                 elif (self.model.tier_2_spots > 0 and self.wallet > price_for_total_time_tier_2):
                     #park and place him in the middle slot
                     self.model.grid.move_agent(self, (9,8))
@@ -369,18 +369,18 @@ class CarAgent(Agent,ParkingModel):
                     self.dir = 4
                     #pays the park
                     self.model.makings += price_for_total_time_tier_2
-                elif (self.model.tier_1_spots > 0 and self.wallet > price_for_total_time_tier_1):
+                elif (self.model.tier_3_spots > 0 and self.wallet > price_for_total_time_tier_3):
                     #park and place him in the middle slot
-                    self.model.grid.move_agent(self, (7,8))
+                    self.model.grid.move_agent(self, (11,8))
                     #change dir to 4 and as such he stays put
                     self.dir = 4
                     #pays the park
-                    self.model.makings += price_for_total_time_tier_1
-                elif (random.randrange(0,100) < percentage_tier_3 and self.model.tier_3_spots > 0):
-                    self.new_time = self.wallet/self.model.tier_3_price
+                    self.model.makings += price_for_total_time_tier_3
+                elif (random.randrange(0,100) < percentage_tier_1 and self.model.tier_1_spots > 0):
+                    self.new_time = self.wallet/self.model.tier_1_price
                     self.wait_time = math.floor(self.new_time)
-                    self.model.makings = self.wait_time * self.model.tier_3_price
-                    self.model.grid.move_agent(self, (11,8))
+                    self.model.makings = self.wait_time * self.model.tier_1_price
+                    self.model.grid.move_agent(self, (7,8))
                     self.dir = 4
                 elif (random.randrange(0,100) < percentage_tier_2 and self.model.tier_2_spots > 0):
                     self.new_time = self.wallet/self.model.tier_2_price
@@ -388,11 +388,11 @@ class CarAgent(Agent,ParkingModel):
                     self.model.makings = self.wait_time * self.model.tier_2_price
                     self.model.grid.move_agent(self, (9,8)) 
                     self.dir = 4 
-                elif (random.randrange(0,100) < percentage_tier_1 and self.model.tier_1_spots > 0):
-                    self.new_time = self.wallet/self.model.tier_1_price
+                elif (random.randrange(0,100) < percentage_tier_3 and self.model.tier_3_spots > 0):
+                    self.new_time = self.wallet/self.model.tier_3_price
                     self.wait_time = math.floor(self.new_time)
-                    self.model.makings = self.wait_time * self.model.tier_1_price
-                    self.model.grid.move_agent(self, (7,8))
+                    self.model.makings = self.wait_time * self.model.tier_3_price
+                    self.model.grid.move_agent(self, (11,8))
                     self.dir = 4
                 else:
                     self.dir = 1
