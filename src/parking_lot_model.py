@@ -308,14 +308,23 @@ class CarAgent(Agent,ParkingModel):
         #check if he is at the entrance
         if(self.pos[0]==12 and self.pos[1]==3):
             if self.model.available_spots > 0:
-                if self.wealth > (self.model.price * self.time):
+                price_for_total_time = self.model.price * self.time
+                percentage = (self.wealth/price_for_total_time)*100
+
+                if self.wealth > price_for_total_time:
+                    #park and place him in the middle slot
+                    self.model.grid.move_agent(self, (9,8))
+                    #change dir to 4 and as such he stays put
+                    self.dir = 4
+                elif random.randrange(0, 100) < percentage:
                     #park and place him in the middle slot
                     self.model.grid.move_agent(self, (9,8))
                     #change dir to 4 and as such he stays put
                     self.dir = 4
                 else:
-                    self.model.grid.move_agent(self, (12,1))
-                    self.dir = 2
+                    #self.model.grid.move_agent(self, (12,1))
+                    self.dir = 1
+                    self.wantsToPark = False
                     
                 #if not greater than the desired total time, create a function to decide if he parks or not
                 #this function sould be more likely to park the closer he can get to the desired time
@@ -327,7 +336,7 @@ class CarAgent(Agent,ParkingModel):
                 self.wait_time = (self.time*10) - 1
             if(self.wait_time == 1):
                 self.wait_time = 9999
-                self.model.grid.move_agent(self, (7,3))
+                self.model.grid.move_agent(self, (7,4))
                 self.dir = 1
                 self.wantsToPark = False
             elif(self.wait_time > 1):
