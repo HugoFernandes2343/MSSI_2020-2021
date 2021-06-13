@@ -313,7 +313,9 @@ class CarAgent(Agent,ParkingModel):
                     self.model.grid.move_agent(self, (9,8))
                     #change dir to 4 and as such he stays put
                     self.dir = 4
-
+                else:
+                    self.model.grid.move_agent(self, (12,1))
+                    self.dir = 2
                     
                 #if not greater than the desired total time, create a function to decide if he parks or not
                 #this function sould be more likely to park the closer he can get to the desired time
@@ -321,13 +323,13 @@ class CarAgent(Agent,ParkingModel):
             #como é que verificamos se há lugares XD
 
         if(self.pos[0]==9 and self.pos[1]==8):
-            print("OLÁ EU SOU O CARRO " + str(self.id) + " " + str(self.time) + " E ESTOU ESTACIONADO, PRETENDO SAIR DAQUI A " + str(self.wait_time))
             if(self.wait_time == 9999):
                 self.wait_time = self.time-1
             if(self.wait_time == 1):
                 self.wait_time = 9999
                 self.model.grid.move_agent(self, (7,3))
-                self.changeDir()
+                self.dir = 1
+                self.wantsToPark = False
             elif(self.wait_time > 1):
                 self.wait_time -= 1    
 
