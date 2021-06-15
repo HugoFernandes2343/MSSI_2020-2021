@@ -55,12 +55,12 @@ model_params = {
     "N_cars": UserSettableParameter("slider", "Number of cars", value=20, min_value=5, max_value=100, step=1),
     "N_spots": UserSettableParameter("slider", "Number of Parking Spots", value=20, min_value=20, max_value=100, step=1),
     "Price_hour": UserSettableParameter("slider", "Price per hour", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
-    "N_tier1_spots": UserSettableParameter("slider", "strat 2: Number of Parking Spots for tier 1", value=20, min_value=5, max_value=100, step=1),
-    "N_tier1_price": UserSettableParameter("slider", "strat 2: Price per hour for tier 1", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
-    "N_tier2_spots": UserSettableParameter("slider", "strat 2: Number of Parking Spots for tier 2", value=10, min_value=5, max_value=50, step=1),
-    "N_tier2_price": UserSettableParameter("slider", "strat 2: Price per hour for tier 2", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
-    "N_tier3_spots": UserSettableParameter("slider", "strat 2: Number of Parking Spots for tier 3", value=5, min_value=5, max_value=25, step=1),
-    "N_tier3_price": UserSettableParameter("slider", "strat 2: Price per hour for tier 3", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
+    "N_tier1_spots": UserSettableParameter("slider", "strat 2/4: Number of Parking Spots for tier 1", value=20, min_value=5, max_value=100, step=1),
+    "N_tier1_price": UserSettableParameter("slider", "strat 2/4: Price per hour for tier 1", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
+    "N_tier2_spots": UserSettableParameter("slider", "strat 2/4: Number of Parking Spots for tier 2", value=10, min_value=5, max_value=50, step=1),
+    "N_tier2_price": UserSettableParameter("slider", "strat 2/4: Price per hour for tier 2", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
+    "N_tier3_spots": UserSettableParameter("slider", "strat 2/4: Number of Parking Spots for tier 3", value=5, min_value=5, max_value=25, step=1),
+    "N_tier3_price": UserSettableParameter("slider", "strat 2/4: Price per hour for tier 3", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
     "Max_time": UserSettableParameter("slider", "strat 3: Maximum parking time", value=1, min_value=1, max_value=24, step=1),
     "Scalling": UserSettableParameter("slider", "strat 4: Scalling of the price", value=0.0, min_value=0.0, max_value=5.0, step=0.1)
 }
