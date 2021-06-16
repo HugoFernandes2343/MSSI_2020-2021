@@ -12,7 +12,7 @@ spawn =[]
 class ParkingModel(Model):
     """A model with some number of agents."""
 
-    def __init__(self, N, width, height,N_cars, N_spots,Price_hour, Strategy,N_tier1_spots,N_tier1_price,N_tier2_spots,N_tier2_price,N_tier3_spots,N_tier3_price,Max_time,Scalling):
+    def __init__(self, N, width, height,N_cars, N_spots,Price_hour, Strategy,N_tier1_spots,N_tier1_price,N_tier2_spots,N_tier2_price,N_tier3_spots,N_tier3_price,Max_time,Scalling_tier1,Scalling_tier2,Scalling_tier3):
         self.num_agents = N_cars
         self.aux = N_cars
         self.grid = MultiGrid(width, height, True)
@@ -38,7 +38,9 @@ class ParkingModel(Model):
         #if(self.strategy == 3):
         self.max_time = Max_time
         #if(self.strategy == 4):
-        self.scalling = Scalling
+        self.scalling_tier1 =Scalling_tier1
+        self.scalling_tier2 =Scalling_tier2
+        self.scalling_tier3 =Scalling_tier3
 
         #Creating the roads
         i = 1
@@ -348,9 +350,10 @@ class CarAgent(Agent,ParkingModel):
 
                 #set the needed variables for the park consideration
                 if self.model.strategy == "4 - Scalling":
-                    price_for_total_time_tier_1 = self.model.tier_1_price * self.time + self.model.scalling * (math.factorial(self.time) - 1)
-                    price_for_total_time_tier_2 = self.model.tier_2_price * self.time + self.model.scalling * (math.factorial(self.time) - 1)
-                    price_for_total_time_tier_3 = self.model.tier_3_price * self.time + self.model.scalling * (math.factorial(self.time) - 1)
+                    #print("O NUMERO INICIAL É DE E " + str(self.time) + " O NUMERO DE POIS DA FORMULA É DE " + str((((self.time -1) * (self.time -1) + (self.time -1)) / 2)))
+                    price_for_total_time_tier_1 = self.model.tier_1_price * self.time + self.model.scalling_tier1 * (((self.time -1) * (self.time -1) + (self.time -1)) / 2)
+                    price_for_total_time_tier_2 = self.model.tier_2_price * self.time + self.model.scalling_tier2 * (((self.time -1) * (self.time -1) + (self.time -1)) / 2)
+                    price_for_total_time_tier_3 = self.model.tier_3_price * self.time + self.model.scalling_tier3 * (((self.time -1) * (self.time -1) + (self.time -1)) / 2)
                 else: 
                     price_for_total_time_tier_1 = self.model.tier_1_price * self.time
                     price_for_total_time_tier_2 = self.model.tier_2_price * self.time
@@ -432,7 +435,7 @@ class CarAgent(Agent,ParkingModel):
                 if(self.pos[0]==7):
                     self.model.tier_1_spots += 1
                 elif(self.pos[0]==9):
-                    if(self.model.strategy == "2 - Premium Spots"):
+                    if(self.model.strategy == "2 - Premium Spots" or self.model.strategy == "4 - Scalling"):
                         self.model.tier_2_spots += 1
                     else:
                         self.model.spots += 1

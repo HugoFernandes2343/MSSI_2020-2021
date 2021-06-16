@@ -62,7 +62,9 @@ model_params = {
     "N_tier3_spots": UserSettableParameter("slider", "strat 2/4: Number of Parking Spots for tier 3", value=5, min_value=5, max_value=25, step=1),
     "N_tier3_price": UserSettableParameter("slider", "strat 2/4: Price per hour for tier 3", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
     "Max_time": UserSettableParameter("slider", "strat 3: Maximum parking time", value=1, min_value=1, max_value=24, step=1),
-    "Scalling": UserSettableParameter("slider", "strat 4: Scalling of the price", value=0.0, min_value=0.0, max_value=5.0, step=0.1)
+    "Scalling_tier1": UserSettableParameter("slider", "strat 4: Scalling of the price on tier 1", value=0.0, min_value=0.0, max_value=5.0, step=0.1),
+    "Scalling_tier2": UserSettableParameter("slider", "strat 4: Scalling of the price on tier 2", value=0.0, min_value=0.0, max_value=5.0, step=0.1),
+    "Scalling_tier3": UserSettableParameter("slider", "strat 4: Scalling of the price on tier 3", value=0.0, min_value=0.0, max_value=5.0, step=0.1)
 }
 
 server = ModularServer(ParkingModel,
