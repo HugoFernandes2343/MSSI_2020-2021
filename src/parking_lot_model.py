@@ -348,9 +348,9 @@ class CarAgent(Agent,ParkingModel):
 
                 #set the needed variables for the park consideration
                 if self.model.strategy == "4 - Scalling":
-                    price_for_total_time_tier_1 = self.model.tier_1_price * self.time + self.model.scalling * (self.time - 1)
-                    price_for_total_time_tier_2 = self.model.tier_2_price * self.time + self.model.scalling * (self.time - 1)
-                    price_for_total_time_tier_3 = self.model.tier_3_price * self.time + self.model.scalling * (self.time - 1)
+                    price_for_total_time_tier_1 = self.model.tier_1_price * self.time + self.model.scalling * (math.factorial(self.time) - 1)
+                    price_for_total_time_tier_2 = self.model.tier_2_price * self.time + self.model.scalling * (math.factorial(self.time) - 1)
+                    price_for_total_time_tier_3 = self.model.tier_3_price * self.time + self.model.scalling * (math.factorial(self.time) - 1)
                 else: 
                     price_for_total_time_tier_1 = self.model.tier_1_price * self.time
                     price_for_total_time_tier_2 = self.model.tier_2_price * self.time
