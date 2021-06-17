@@ -179,7 +179,7 @@ class ParkingModel(Model):
             self.grid.place_agent(a,(i,5))
             i = i - 1
 
-        i = 8
+        i = 8 
         while i < 12 :
             self.num_agents = self.num_agents + 1
             a = Tile(self.num_agents,self)
@@ -189,7 +189,7 @@ class ParkingModel(Model):
         self.num_agents = self.aux
         for i in range(self.num_agents):
             a = CarAgent(i, self)
-            # TODO define the limits of this variables
+            # TODO define the limits of  variables
             a.wallet = round(random.uniform(0.0,100.0),2)
             a.time = random.randint(1,24)
             a.state = "moving"
@@ -209,20 +209,19 @@ class ParkingModel(Model):
     # self.datacollector = DataCollector(
     #  model_reporters={"Gini": compute_gini},
 
-    #            agent_reporters={"Wealth": "wealth"})
+    #            agent_reporters={"Wallet": "wallet"})
 
     def step(self):
         # self.datacollector.collect(self)
         self.schedule.step()
 
 class CarAgent(Agent,ParkingModel):
-    """ An agent with fixed initial wealth."""
 
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.model = model
         self.id = unique_id
-        self.wealth = 1
+        #self.wealth = random.randint(1,30)
         self.flag = 0
         self.dir = 0
         '''Flag that means the car does not have money to a lower tier'''
@@ -319,7 +318,7 @@ class CarAgent(Agent,ParkingModel):
             if (self.model.strategy == "1 - Default" or self.model.strategy == "3 - Max Time"):
                 if self.model.available_spots > 0:
                     price_for_total_time = self.model.price * self.time
-                    percentage = (self.wealth/price_for_total_time)*100
+                    percentage = (self.wallet/price_for_total_time)*100
     
                     if self.wallet > price_for_total_time:
                         #park and place him in the middle slot
@@ -336,7 +335,7 @@ class CarAgent(Agent,ParkingModel):
                         self.model.grid.move_agent(self, (9,8))
                         #change dir to 4 and as such he stays put
                         self.dir = 4
-                        self.spots -=1
+                        self.model.spots -=1
                     else:
                         self.dir = 1
                         self.wantsToPark = False
@@ -358,9 +357,9 @@ class CarAgent(Agent,ParkingModel):
                     price_for_total_time_tier_1 = self.model.tier_1_price * self.time
                     price_for_total_time_tier_2 = self.model.tier_2_price * self.time
                     price_for_total_time_tier_3 = self.model.tier_3_price * self.time
-                percentage_tier_1 = (self.wealth/price_for_total_time_tier_1)*100
-                percentage_tier_2 = (self.wealth/price_for_total_time_tier_2)*100
-                percentage_tier_3 = (self.wealth/price_for_total_time_tier_3)*100
+                percentage_tier_1 = (self.wallet/price_for_total_time_tier_1)*100
+                percentage_tier_2 = (self.wallet/price_for_total_time_tier_2)*100
+                percentage_tier_3 = (self.wallet/price_for_total_time_tier_3)*100
                 
                 #print("Eu sou o carro " + str(self.id) +" E tenho " + str(self.wallet) +" para gastar, o 1 custa me " + str(price_for_total_time_tier_1))
                 #print("Eu sou o carro " + str(self.id) +" E tenho " + str(self.wallet) +" para gastar, o 2 custa me " + str(price_for_total_time_tier_2))
@@ -467,7 +466,6 @@ class CarAgent(Agent,ParkingModel):
         self.move()
 
 
-# todo remove wealth only leave wall flag
 class Tile(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)

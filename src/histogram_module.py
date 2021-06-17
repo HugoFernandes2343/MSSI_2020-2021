@@ -16,7 +16,7 @@ class HistogramModule(VisualizationElement):
         self.js_code = "elements.push(" + new_element + ");"
 
     def render(self, model):
-        wealth_vals = [agent.wealth for agent in model.schedule.agents]
-        hist = np.histogram(wealth_vals, bins=self.bins)[0]
+        wallet_vals = [agent.wallet for agent in model.schedule.agents]
+        hist = np.histogram(wallet_vals, bins=self.bins)[0]
         return [int(x) for x in hist]
 
