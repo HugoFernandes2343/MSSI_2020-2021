@@ -18,6 +18,7 @@ class ParkingModel(Model):
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
+        self.step_counter=1
         
         '''Parking makings'''
         self.makings = 0
@@ -223,7 +224,12 @@ class ParkingModel(Model):
 
     def step(self):
         self.datacollector.collect(self)
+        #30 steps = 1 hora
+        if(self.step_counter==5040):
+            self.running=False
         self.schedule.step()
+        self.step_counter += 1
+        
 
 class CarAgent(Agent,ParkingModel):
 
@@ -464,7 +470,7 @@ class CarAgent(Agent,ParkingModel):
                     self.wait_time = self.model.max_time
                     #print("O MEU NOME É CARRO " + str(self.id) + " ESTOU A QUERER ESPERAR NO PARQUE DURANTE " + str(self.wait_time) + "E O MAX TIME É " + str(self.model.max_time))
                 else:
-                    self.wait_time = (self.time*10) - 1
+                    self.wait_time = (self.time*30) - 1 #30 steps = 1h
             if(self.wait_time == 1):
                 self.wait_time = 9999
                 if(self.pos[0]==7):
