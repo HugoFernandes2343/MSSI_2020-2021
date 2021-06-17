@@ -26,12 +26,23 @@ def agent_portrayal(agent):
 
     return portrayal
 
-
 grid = CanvasGrid(agent_portrayal, 20, 20, 800,800 )
 
-chart = ChartModule([{"Label": "Makings",
-                    "Color": "Black"}],
-                   data_collector_name='datacollector')
+makingsChart = ChartModule([{"Label": "Makings",
+                "Color": "Black"}],
+                data_collector_name='datacollector')
+carsChart = ChartModule([{"Label": "TotalCars",
+            "Color": "Black"}],
+            data_collector_name='datacollector')
+MeanPaymentChart = ChartModule([{"Label": "MeanPayment",
+            "Color": "Black"}],
+            data_collector_name='datacollector')
+ParkedChart = ChartModule([{"Label": "ParkedTime",
+            "Color": "Black"}],
+            data_collector_name='datacollector')            
+FFChart = ChartModule([{"Label": "Cars That Gave Up",
+            "Color": "Black"}],
+            data_collector_name='datacollector')
 
 #histogram = HistogramModule(list(range(100)), 800, 800)
 
@@ -68,7 +79,7 @@ model_params = {
 }
 
 server = ModularServer(ParkingModel,
-                       [grid,chart],
+                       [grid,makingsChart,carsChart,MeanPaymentChart,ParkedChart,FFChart],
                        "Money Model",
                        model_params)
 server.launch()
