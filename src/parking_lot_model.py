@@ -18,6 +18,7 @@ class ParkingModel(Model):
         self.grid = MultiGrid(width, height, True)
         self.schedule = RandomActivation(self)
         self.running = True
+        self.step_counter=0
         
         '''Parking makings'''
         self.makings = 0
@@ -211,7 +212,9 @@ class ParkingModel(Model):
 
     def step(self):
         self.datacollector.collect(self)
-        self.schedule.step()
+        if(self.step_counter<1000):
+            self.schedule.step()
+            self.step_counter += 1
 
 class CarAgent(Agent,ParkingModel):
 
