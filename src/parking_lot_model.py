@@ -330,7 +330,7 @@ class CarAgent(Agent,ParkingModel):
                     elif random.randrange(0, 100) < percentage:
                         new_time = self.wallet/self.model.price
                         self.wait_time = math.floor(new_time)
-                        self.model.makings = self.wait_time * self.model.price
+                        self.model.makings += self.wait_time * self.model.price
                         #park and place him in the middle slot
                         self.model.grid.move_agent(self, (9,8))
                         #change dir to 4 and as such he stays put
@@ -395,7 +395,7 @@ class CarAgent(Agent,ParkingModel):
                 elif (random.randrange(0,100) < percentage_tier_1 and self.model.tier_1_spots > 0):
                     self.new_time = self.wallet/self.model.tier_1_price
                     self.wait_time = math.floor(self.new_time)
-                    self.model.makings = self.wait_time * self.model.tier_1_price
+                    self.model.makings += self.wait_time * self.model.tier_1_price
                     self.model.grid.move_agent(self, (7,8))
                     self.dir = 4
                     #ocupies the place in the park
@@ -403,7 +403,7 @@ class CarAgent(Agent,ParkingModel):
                 elif (random.randrange(0,100) < percentage_tier_2 and self.model.tier_2_spots > 0):
                     self.new_time = self.wallet/self.model.tier_2_price
                     self.wait_time = math.floor(self.new_time)
-                    self.model.makings = self.wait_time * self.model.tier_2_price
+                    self.model.makings += self.wait_time * self.model.tier_2_price
                     self.model.grid.move_agent(self, (9,8)) 
                     self.dir = 4 
                     #ocupies the place in the park
@@ -411,7 +411,7 @@ class CarAgent(Agent,ParkingModel):
                 elif (random.randrange(0,100) < percentage_tier_3 and self.model.tier_3_spots > 0):
                     self.new_time = self.wallet/self.model.tier_3_price
                     self.wait_time = math.floor(self.new_time)
-                    self.model.makings = self.wait_time * self.model.tier_3_price
+                    self.model.makings += self.wait_time * self.model.tier_3_price
                     self.model.grid.move_agent(self, (11,8))
                     self.dir = 4
                     #ocupies the place in the park
