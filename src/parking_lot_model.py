@@ -203,16 +203,14 @@ class ParkingModel(Model):
                     done = 1
                     self.grid.place_agent(a, (x, y))
 
+        self.datacollector = DataCollector(
+            model_reporters={"Makings": "makings"}
 
-
-
-    # self.datacollector = DataCollector(
-    #  model_reporters={"Gini": compute_gini},
-
-    #            agent_reporters={"Wallet": "wallet"})
+            #agent_reporters={"Wallet": "wallet"}
+        )
 
     def step(self):
-        # self.datacollector.collect(self)
+        self.datacollector.collect(self)
         self.schedule.step()
 
 class CarAgent(Agent,ParkingModel):

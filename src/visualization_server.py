@@ -29,11 +29,11 @@ def agent_portrayal(agent):
 
 grid = CanvasGrid(agent_portrayal, 20, 20, 800,800 )
 
-#chart = ChartModule([{"Label": "Gini",
-#                    "Color": "Black"}],
-#                   data_collector_name='datacollector')
+chart = ChartModule([{"Label": "Makings",
+                    "Color": "Black"}],
+                   data_collector_name='datacollector')
 
-histogram = HistogramModule(list(range(100)), 800, 800)
+#histogram = HistogramModule(list(range(100)), 800, 800)
 
 """ 
 Parameter types include:
@@ -68,7 +68,7 @@ model_params = {
 }
 
 server = ModularServer(ParkingModel,
-                       [grid,histogram],
+                       [grid,chart],
                        "Money Model",
                        model_params)
 server.launch()
