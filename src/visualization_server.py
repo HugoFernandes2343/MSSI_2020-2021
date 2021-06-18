@@ -64,7 +64,7 @@ model_params = {
     "Strategy": UserSettableParameter("choice", 'Strategy to Use', value='1 - Default',
                                         choices=['1 - Default', '2 - Premium Spots', '3 - Max Time', '4 - Scalling', '5 - Reservation']),
     "N_cars": UserSettableParameter("slider", "Number of cars", value=20, min_value=5, max_value=100, step=1),
-    "N_spots": UserSettableParameter("slider", "Number of Parking Spots", value=20, min_value=20, max_value=100, step=1),
+    "N_spots": UserSettableParameter("slider", "Number of Parking Spots", value=10, min_value=10, max_value=100, step=1),
     "Price_hour": UserSettableParameter("slider", "Price per hour", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
     "N_tier1_spots": UserSettableParameter("slider", "strat 2/4: Number of Parking Spots for tier 1", value=20, min_value=5, max_value=100, step=1),
     "N_tier1_price": UserSettableParameter("slider", "strat 2/4: Price per hour for tier 1", value=0.1, min_value=0.1, max_value=10.0, step=0.1),
@@ -80,6 +80,7 @@ model_params = {
 
 server = ModularServer(ParkingModel,
                        [grid,makingsChart,carsChart,MeanPaymentChart,ParkedChart,FFChart],
+                       #[grid, makingsChart],
                        "Money Model",
                        model_params)
 server.launch()

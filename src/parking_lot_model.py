@@ -226,6 +226,12 @@ class ParkingModel(Model):
         self.datacollector.collect(self)
         #30 steps = 1 hora
         if(self.step_counter==5040):
+            print("THE SIMULATION ENDED SUCCESSFULLY!! The GATHERED INFORMATION IS PRESENTED BELLOW:")
+            print("PARK TOTAL MAKING " + str(self.makings))
+            print("TOTAL CARS PARKED " + str(self.total_parked_cars))
+            print("TOTAL HOURS SPENT PARKED " + str(self.total_parked_time))
+            print("MEAN OF ALL THE PARKING PAYMENTS " + str(self.mean_park_payment))
+            print("TOTAL NUMBER OF CARS THAT GAVE UP PARKING " + str(self.total_forfeit))
             self.running=False
         self.schedule.step()
         self.step_counter += 1
